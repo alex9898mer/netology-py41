@@ -31,18 +31,21 @@ class Lector(Mentor, ABC):
     def get_student_marks(self, student: Student, course_name: str) -> Union[list, str]:
         if course_name not in self.courses_attached:
             return f"Данный лектор не ведет этот курс [ {course_name} ]"
-        elif not student.courses_in_progress.__contains__(course_name):
+        elif not student.courses_attached.__contains__(course_name):
             return f"Студент [ {student.name} {student.surname} ] не имеет данного курса в начатых"
         elif not student.grades.keys().__contains__(course_name):
             return f"Студент [ {student.name} {student.surname} ] не имеет оценок по данному курсу"
 
         return student.get_course_marks(course_name)
 
-    def course_exists(self, course_name):
+    def _course_exists(self, course_name):
         return self.courses_attached.__contains__(course_name)
 
     def get_lectures_media(self) -> float:
         return self.lectures_media
 
-    def set_course_grade(self, mark):
-        pass
+    def set_course_grade(self, course_name: str, mark: int):
+        if not self._course_exists(course_name):
+            self.grades.update({course_name: [mark]})
+        else:
+            self.grades.get(course_name).append(mark)

@@ -12,7 +12,7 @@ class Base:
     def attach_course(self, course_name):
         raise NotImplementedError
 
-    def course_exists(self, course_name):
+    def _course_exists(self, course_name):
         raise NotImplementedError
 
     def __str__(self):

@@ -1,4 +1,4 @@
-from mds import Lector, Student, Reviewer
+from models import Lector, Student, Reviewer
 
 
 if __name__ == '__main__':

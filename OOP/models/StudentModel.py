@@ -47,12 +47,13 @@ class Student(Base, ABC):
     def get_course_marks(self, course_name) -> list:
         return self.grades[course_name]
 
-    def course_exists(self, course_name):
+    def _course_exists(self, course_name):
         return self.courses_attached.__contains__(course_name)
 
     def set_lector_mark(self, lector: Lector, course_name: str, mark: int):
-        if not self.course_exists(course_name):
+        if not self._course_exists(course_name):
             return f"Студент [ {self.name} {self.surname} ] не подписан на данный курс [ {course_name} ]"
-        elif not lector.course_exists(course_name):
+        elif not lector._course_exists(course_name):
             return f"Лектор [ {lector.name} {lector.surname} ] не ведет на данный курс [ {course_name} ]"
 
+        lector.set_course_grade(course_name, mark)
