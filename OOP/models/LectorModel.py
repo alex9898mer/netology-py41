@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 from abc import ABC
 
 from .MentorModel import Mentor
@@ -21,8 +21,8 @@ class Lector(Mentor, ABC):
         :return: String representation of the lector model
         """
         return (
-            f"Имя: {self.name}"
-            f"Фамилия: {self.surname}"
+            f"Имя: {self._name}"
+            f"Фамилия: {self._surname}"
             f"Средняя оценка за лекции: {self.lectures_media} \n"
         )
 
@@ -33,9 +33,9 @@ class Lector(Mentor, ABC):
         :return: String result of the comparison between two Lector models
         """
         return (
-            f"{self.name} {self.surname} имеет больший средний балл за лекции \n"
+            f"{self.get_name()} {self.get_surname()} имеет больший средний балл за лекции \n"
             if self.lectures_media > other.lectures_media
-            else f"{other.name} {other.surname} имеет больший средний балл за лекции \n"
+            else f"{other.get_name()} {other.get_surname()} имеет больший средний балл за лекции \n"
         )
 
     def get_student_marks(
@@ -48,40 +48,40 @@ class Lector(Mentor, ABC):
         :return: Student marks if specific course is found, else returns None
         """
 
-        if course_name not in self.courses_attached:
+        if course_name not in self._courses_attached:
             print(f"Данный лектор не ведет этот курс [ {course_name} ]", end="\n")
             return
-        elif not student.courses_attached.__contains__(course_name):
+        elif not student._courses_attached.__contains__(course_name):
             print(
-                f"Студент [ {student.name} {student.surname} ] не имеет данного курса в начатых",
+                f"Студент [ {student._name} {student._surname} ] не имеет данного курса в начатых",
                 end="\n",
             )
             return
-        elif not student.grades.keys().__contains__(course_name):
+        elif not student._grades.keys().__contains__(course_name):
             print(
-                f"Студент [ {student.name} {student.surname} ] не имеет оценок по данному курсу",
+                f"Студент [ {student._name} {student._surname} ] не имеет оценок по данному курсу",
                 end="\n",
             )
             return
 
         return student.get_course_marks(course_name)
 
-    def _course_exists(self, course_name: str) -> Union[True, False]:
+    def course_exists(self, course_name: str) -> bool:
         """
             Method used to find if lector is enrolled on the course
         :param course_name: Course to search for
         :return: Course exists or not as enrolled
         """
-        return self.courses_attached.__contains__(course_name)
+        return self._courses_attached.__contains__(course_name)
 
     def recalculate_lectures_media(self) -> None:
         lectures_media: float = 0.0
-        if not list(self.grades.keys()):
+        if not list(self._grades.keys()):
             return
 
-        for course in self.grades:
+        for course in self._grades:
             lectures_media += (
-                sum(self.grades.get(course)) / self.grades.get(course).__len__()
+                    sum(self._grades.get(course)) / self._grades.get(course).__len__()
             )
         self.lectures_media = lectures_media
 
@@ -93,10 +93,20 @@ class Lector(Mentor, ABC):
         :return:
         """
 
-        if not self._course_exists(course_name):
-            self.grades.update({course_name: [mark]})
+        if not self.course_exists(course_name):
+            self._grades.update({ course_name: [mark]})
         else:
-            self.grades.get(course_name).append(mark)
+            self._grades.get(course_name).append(mark)
 
         # Recalculate lectors grades media on every new added grade
         self.recalculate_lectures_media()
+
+    def get_name(self) -> str:
+        return self._name
+
+    def get_surname(self) -> str:
+        return self._surname
+
+    def get_attached_courses(self) -> List[str]:
+        return self._courses_attached
+
