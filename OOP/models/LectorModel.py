@@ -10,9 +10,9 @@ class Lector(Mentor, ABC):
     Model which represents Lector object
     """
 
-    def __init__(self, name, surname, course_name=None):
-        super(Lector, self).__init__(name, surname)
-        self.attach_course(course_name)
+    def __init__(self, name: str, surname: str, *args, course_name: str = None):
+        super(Lector, self).__init__(name, surname, "Lector", *args)
+        self.attach_courses(course_name)
         self.lectures_media: float = 0.0
 
     def __str__(self) -> str:
@@ -48,10 +48,10 @@ class Lector(Mentor, ABC):
         :return: Student marks if specific course is found, else returns None
         """
 
-        if course_name not in self._courses_attached:
+        if course_name not in self._enrolled_courses:
             print(f"Данный лектор не ведет этот курс [ {course_name} ]", end="\n")
             return
-        elif not student._courses_attached.__contains__(course_name):
+        elif not student._enrolled_courses.__contains__(course_name):
             print(
                 f"Студент [ {student._name} {student._surname} ] не имеет данного курса в начатых",
                 end="\n",
@@ -66,14 +66,6 @@ class Lector(Mentor, ABC):
 
         return student.get_course_marks(course_name)
 
-    def course_exists(self, course_name: str) -> bool:
-        """
-            Method used to find if lector is enrolled on the course
-        :param course_name: Course to search for
-        :return: Course exists or not as enrolled
-        """
-        return self._courses_attached.__contains__(course_name)
-
     def recalculate_lectures_media(self) -> None:
         lectures_media: float = 0.0
         if not list(self._grades.keys()):
@@ -81,7 +73,7 @@ class Lector(Mentor, ABC):
 
         for course in self._grades:
             lectures_media += (
-                    sum(self._grades.get(course)) / self._grades.get(course).__len__()
+                sum(self._grades.get(course)) / self._grades.get(course).__len__()
             )
         self.lectures_media = lectures_media
 
@@ -94,19 +86,14 @@ class Lector(Mentor, ABC):
         """
 
         if not self.course_exists(course_name):
-            self._grades.update({ course_name: [mark]})
+            self._grades.update({course_name: [mark]})
         else:
             self._grades.get(course_name).append(mark)
 
         # Recalculate lectors grades media on every new added grade
         self.recalculate_lectures_media()
 
-    def get_name(self) -> str:
-        return self._name
-
-    def get_surname(self) -> str:
-        return self._surname
-
-    def get_attached_courses(self) -> List[str]:
-        return self._courses_attached
-
+    def rate_hw(self, student: Student, course_name: str, grade: int):
+        print(
+            f"{self.get_name()} {self.get_surname()} не может выставлять оценки студентам из-за своего статуса {self.get_role()}"
+        )

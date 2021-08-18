@@ -1,13 +1,13 @@
 from abc import ABC
-from typing import List
+from typing import List, Union
 
 from .MentorModel import Mentor
 from .StudentModel import Student
 
 
 class Reviewer(Mentor, ABC):
-    def __init__(self, name, surname):
-        super(Reviewer, self).__init__(name, surname)
+    def __init__(self, name: str, surname: str, gender: str):
+        super(Reviewer, self).__init__(name, surname, "Reviewer", gender)
 
     def __str__(self) -> str:
         return f"Имя: {self._name}" f"Фамилия: {self._surname}"
@@ -24,6 +24,3 @@ class Reviewer(Mentor, ABC):
                 student._grades[course_name] = [grade]
         else:
             print("Ошибка")
-
-    def get_attached_courses(self) -> List[str]:
-        return self._courses_attached
