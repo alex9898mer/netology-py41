@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import List, Union
 
 from .MentorModel import Mentor
 from .StudentModel import Student
@@ -10,7 +9,7 @@ class Reviewer(Mentor, ABC):
         super(Reviewer, self).__init__(name, surname, "Reviewer", gender)
 
     def __str__(self) -> str:
-        return f"Имя: {self._name}" f"Фамилия: {self._surname}"
+        return f"Имя: {self._name}\n" f"Фамилия: {self._surname}\n"
 
     def rate_hw(self, student: Student, course_name: str, grade: int):
         if (
@@ -19,8 +18,8 @@ class Reviewer(Mentor, ABC):
             and student.course_exists(course_name)
         ):
             if course_name in student._grades:
-                student._grades[course_name] += [grade]
+                student._grades[course_name].append(grade)
             else:
-                student._grades[course_name] = [grade]
+                student._grades.update({course_name: [grade]})
         else:
             print("Ошибка")

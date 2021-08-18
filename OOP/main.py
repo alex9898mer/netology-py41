@@ -1,57 +1,142 @@
+from typing import List, Union
+
 from models import Student, Reviewer, Lector
 
 
-def test1():
-    reviewer = Reviewer("Some", "Buddy")
-    student = Student("Roy", "Eman", "your_gender")
-    student.attach_courses("Python")
-    #
-    reviewer.attach_courses("Python")
-    reviewer1 = Lector("Test", "Buddy")
-    reviewer2 = Lector("Some", "Buddy")
-
-    reviewer1.lectures_media = 10.0
-
-    print(reviewer2 < reviewer1)
-
-    reviewer.rate_hw(student, "Python", 10)
-
-    print(f"{student.get_grades()=}")
-
-    print(reviewer.get_attached_courses(), reviewer1.get_attached_courses(), sep="\n")
-
-
-def test2():
+def main():
     # Initialize roles
-    student: Student = Student(name="John", surname="Doe")
-    reviewer: Reviewer = Reviewer(name="Ketty", surname="Shoe", gender="female")
+    student1: Student = Student(name="John", surname="Doe")
+    student2: Student = Student(name="Luis", surname="Hack")
+    reviewer1: Reviewer = Reviewer(name="Ketty", surname="Shoe", gender="female")
+    reviewer2: Reviewer = Reviewer(name="Kate", surname="Black", gender="female")
     lector1: Lector = Lector(name="Magnus", surname="Grant")
     lector2: Lector = Lector(name="Matt", surname="White")
-    # Fill roles
+
     """
         Provision roles
     """
     # Attach courses
-    student.attach_courses("Python")
-    reviewer.attach_courses("Python")
-    lector1.attach_courses(["Go", "Python"])
-    lector2.attach_courses(["Java", "Python"])
+    student1.attach_courses(courses="Python")
+    student1.attach_courses(courses=["Go", "Java"])
 
-    # Set grades
-    reviewer.rate_hw(student=student, course_name="Python", grade=10)
-    reviewer.rate_hw(student=student, course_name="Python", grade=9)
-    reviewer.rate_hw(student=student, course_name="Python", grade=5)
+    student2.attach_courses(courses="Python")
+    student2.attach_courses(courses=[".Net", "Java"])
 
-    print(f"{student.get_grades()=}")
+    reviewer1.attach_courses(courses="Python")
+    reviewer1.attach_courses(courses=["Ruby", "Java"])
+
+    reviewer2.attach_courses(courses="Go")
+    reviewer2.attach_courses(courses=["Python", ".Net"])
+
+    lector1.attach_courses(courses="Go")
+    lector1.attach_courses(courses=[".Net", "Java"])
+
+    lector2.attach_courses(courses="Ruby")
+    lector2.attach_courses(courses=["Java", "Python"])
+
+    # Set student grades
+    reviewer1.rate_hw(student=student1, course_name="Python", grade=10)
+    reviewer1.rate_hw(student=student1, course_name="Python", grade=9)
+    reviewer1.rate_hw(student=student1, course_name="Python", grade=5)
+    reviewer1.rate_hw(student=student1, course_name="Java", grade=9)
+    reviewer1.rate_hw(student=student1, course_name="Java", grade=9)
+    reviewer1.rate_hw(student=student1, course_name="Java", grade=10)
+
+    reviewer1.rate_hw(student=student2, course_name="Python", grade=7)
+    reviewer1.rate_hw(student=student2, course_name="Python", grade=8)
+    reviewer1.rate_hw(student=student2, course_name="Python", grade=9)
+    reviewer1.rate_hw(student=student2, course_name="Java", grade=8)
+    reviewer1.rate_hw(student=student2, course_name="Java", grade=9)
+    reviewer1.rate_hw(student=student2, course_name="Java", grade=7)
+
+    reviewer2.rate_hw(student=student1, course_name="Python", grade=10)
+    reviewer2.rate_hw(student=student1, course_name="Python", grade=9)
+    reviewer2.rate_hw(student=student1, course_name="Python", grade=5)
+    reviewer2.rate_hw(student=student1, course_name="Go", grade=10)
+    reviewer2.rate_hw(student=student1, course_name="Go", grade=9)
+    reviewer2.rate_hw(student=student1, course_name="Go", grade=5)
+
+    reviewer2.rate_hw(student=student2, course_name="Python", grade=10)
+    reviewer2.rate_hw(student=student2, course_name="Python", grade=9)
+    reviewer2.rate_hw(student=student2, course_name="Python", grade=5)
+    reviewer2.rate_hw(student=student2, course_name=".Net", grade=10)
+    reviewer2.rate_hw(student=student2, course_name=".Net", grade=9)
+    reviewer2.rate_hw(student=student2, course_name=".Net", grade=5)
+
+    # Set lector grades
+    student1.set_lector_mark(lector=lector1, course_name="Go", mark=10)
+    student1.set_lector_mark(lector=lector1, course_name="Go", mark=8)
+    student1.set_lector_mark(lector=lector1, course_name="Go", mark=7)
+    student1.set_lector_mark(lector=lector1, course_name="Java", mark=7)
+    student1.set_lector_mark(lector=lector1, course_name="Java", mark=7)
+    student1.set_lector_mark(lector=lector1, course_name="Java", mark=7)
+
+    student2.set_lector_mark(lector=lector1, course_name=".Net", mark=10)
+    student2.set_lector_mark(lector=lector1, course_name=".Net", mark=5)
+    student2.set_lector_mark(lector=lector1, course_name=".Net", mark=7)
+    student2.set_lector_mark(lector=lector1, course_name="Java", mark=7)
+    student2.set_lector_mark(lector=lector1, course_name="Java", mark=8)
+    student2.set_lector_mark(lector=lector1, course_name="Java", mark=7)
+
+    student1.set_lector_mark(lector=lector2, course_name="Python", mark=9)
+    student1.set_lector_mark(lector=lector2, course_name="Python", mark=6)
+    student1.set_lector_mark(lector=lector2, course_name="Python", mark=8)
+    student1.set_lector_mark(lector=lector2, course_name="Java", mark=8)
+    student1.set_lector_mark(lector=lector2, course_name="Java", mark=10)
+    student1.set_lector_mark(lector=lector2, course_name="Java", mark=9)
+
+    student2.set_lector_mark(lector=lector2, course_name="Python", mark=7)
+    student2.set_lector_mark(lector=lector2, course_name="Python", mark=5)
+    student2.set_lector_mark(lector=lector2, course_name="Python", mark=10)
+    student2.set_lector_mark(lector=lector2, course_name="Java", mark=9)
+    student2.set_lector_mark(lector=lector2, course_name="Java", mark=10)
+    student2.set_lector_mark(lector=lector2, course_name="Java", mark=7)
+
     """
-        Test roles
+        Comparisons
     """
-    print(f"\n{'='*20} Testing enrollment for already started course {'='*20}\n")
-    student.attach_courses("Python")
+
+    print(f"\n{'='*30} Сравнивание двух лекторов между собой {'='*30}\n")
     print(
-        f"\n{'='*20} Finished Testing enrollment for already started course {'='*20}\n"
+        f"[ {lector1.get_name()} ] {lector1.get_grades()=} ==> {lector1.get_lectures_media()=}",
+        end="\n",
     )
+    print(
+        f"[ {lector2.get_name()} ] {lector2.get_grades()=} ==> {lector2.get_lectures_media()=}",
+        end="\n",
+    )
+    print(lector1 < lector2, end="\n")
+
+    print(f"\n{'='*30} Сравнивание двух студентов между собой {'='*30}\n")
+    print(
+        f"[ {student1.get_name()} ] {student1.get_grades()=} ==> {student1.get_hw_media()=}",
+        end="\n",
+    )
+    print(
+        f"[ {student2.get_name()} ] {student2.get_grades()=} ==> {student2.get_hw_media()=}",
+        end="\n",
+    )
+    print(student1 < student2)
+
+    """
+        Task 4
+    """
+
+    task4('Python', [student1, student2])
+    task4('Python', [lector1, lector2])
+
+
+def task4(course_name: str, recipients: List[Union[Student, Lector]]):
+    lecture_media: List[float] = []
+    for recipient in recipients:
+        if recipient.course_exists(course_name):
+            lecture_media.append(
+                sum(recipient.get_grades().get(course_name)) / recipient.get_grades().get(course_name).__len__()
+            )
+    print(f"Средняя оценка по всем {recipients[0].get_role()} записанных на курс [ {course_name} ] "
+          f"==> {float((sum(lecture_media) / lecture_media.__len__()).__format__('.4'))}", end="\n")
 
 
 if __name__ == "__main__":
-    test2()
+    main()
+

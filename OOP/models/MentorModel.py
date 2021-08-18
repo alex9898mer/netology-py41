@@ -23,3 +23,7 @@ class Mentor(Base, ABC):
                 student._grades[course_name] = [grade]
         else:
             print("Ошибка")
+
+    def get_lectures_media(self) -> float:
+        print(f"{self.get_role()} не может иметь оценок за лекции")
+        return 0

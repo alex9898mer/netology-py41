@@ -13,7 +13,7 @@ class Lector(Mentor, ABC):
     def __init__(self, name: str, surname: str, *args, course_name: str = None):
         super(Lector, self).__init__(name, surname, "Lector", *args)
         self.attach_courses(course_name)
-        self.lectures_media: float = 0.0
+        self._lectures_media: float = 0.0
 
     def __str__(self) -> str:
         """
@@ -21,9 +21,9 @@ class Lector(Mentor, ABC):
         :return: String representation of the lector model
         """
         return (
-            f"Имя: {self._name}"
-            f"Фамилия: {self._surname}"
-            f"Средняя оценка за лекции: {self.lectures_media} \n"
+            f"Имя: {self._name}\n"
+            f"Фамилия: {self._surname}\n"
+            f"Средняя оценка за лекции: {self._lectures_media} \n"
         )
 
     def __lt__(self, other) -> str:
@@ -34,7 +34,7 @@ class Lector(Mentor, ABC):
         """
         return (
             f"{self.get_name()} {self.get_surname()} имеет больший средний балл за лекции \n"
-            if self.lectures_media > other.lectures_media
+            if self._lectures_media > other._lectures_media
             else f"{other.get_name()} {other.get_surname()} имеет больший средний балл за лекции \n"
         )
 
@@ -67,15 +67,17 @@ class Lector(Mentor, ABC):
         return student.get_course_marks(course_name)
 
     def recalculate_lectures_media(self) -> None:
-        lectures_media: float = 0.0
+        lectures_media: List[float] = []
         if not list(self._grades.keys()):
             return
 
         for course in self._grades:
-            lectures_media += (
+            lectures_media.append(
                 sum(self._grades.get(course)) / self._grades.get(course).__len__()
             )
-        self.lectures_media = lectures_media
+        self._lectures_media = float(
+            (sum(lectures_media) / lectures_media.__len__()).__format__(".4")
+        )
 
     def set_course_grade(self, course_name: str, mark: int) -> None:
         """
@@ -85,10 +87,12 @@ class Lector(Mentor, ABC):
         :return:
         """
 
-        if not self.course_exists(course_name):
-            self._grades.update({course_name: [mark]})
-        else:
+        if self.course_exists(course_name) and list(self._grades.keys()).__contains__(
+            course_name
+        ):
             self._grades.get(course_name).append(mark)
+        else:
+            self._grades.update({course_name: [mark]})
 
         # Recalculate lectors grades media on every new added grade
         self.recalculate_lectures_media()
@@ -97,3 +101,6 @@ class Lector(Mentor, ABC):
         print(
             f"{self.get_name()} {self.get_surname()} не может выставлять оценки студентам из-за своего статуса {self.get_role()}"
         )
+
+    def get_lectures_media(self) -> float:
+        return self._lectures_media

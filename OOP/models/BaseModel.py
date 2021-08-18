@@ -17,7 +17,14 @@ class Base:
         :param course_name: Course to search for
         :return: Course exists or not as enrolled
         """
-        return self._enrolled_courses.__contains__(course_name.lower().capitalize())
+        from re import search
+
+        course: str = (
+            f"{course_name[0]}{course_name[1:].lower().capitalize()}"
+            if bool(search(r"^\W", course_name))
+            else course_name
+        )
+        return self._enrolled_courses.__contains__(course)
 
     def __str__(self) -> str:
         raise NotImplementedError
@@ -25,26 +32,26 @@ class Base:
     def __lt__(self, other):
         raise NotImplementedError
 
-    def attach_courses(self, course: Union[str, List[str]]) -> None:
-        if isinstance(course, List):
+    def attach_courses(self, courses: Union[str, List[str]]) -> None:
+        if isinstance(courses, List):
             existing_courses: List[str] = []
-            for course_name in course:
+            for course_name in courses:
                 if self.course_exists(course_name):
                     existing_courses.append(course_name.lower().capitalize())
-                    course.remove(course_name.lower().capitalize())
+                    courses.remove(course_name.lower().capitalize())
             if existing_courses:
                 print(
                     f"{self.get_name()} {self.get_surname()} уже записан на данные курсы {existing_courses}",
                     end="\n",
                 )
-            self._enrolled_courses.extend(course)
-        elif isinstance(course, str):
-            if self.course_exists(course):
+            self._enrolled_courses.extend(courses)
+        elif isinstance(courses, str):
+            if self.course_exists(courses):
                 print(
-                    f"{self.get_role()} {self.get_name()} {self.get_surname()} уже записан на данный курс [ {course} ]",
+                    f"{self.get_role()} {self.get_name()} {self.get_surname()} уже записан на данный курс [ {courses} ]",
                     end="\n",
                 )
-            self._enrolled_courses.append(course.lower().capitalize())
+            self._enrolled_courses.append(courses.lower().capitalize())
 
     def finish_course(self, course_name: str) -> None:
         if self.course_exists(course_name):
