@@ -122,8 +122,8 @@ def main():
         Task 4
     """
 
-    task4('Python', [student1, student2])
-    task4('Python', [lector1, lector2])
+    task4("Python", [student1, student2])
+    task4("Python", [lector1, lector2])
 
 
 def task4(course_name: str, recipients: List[Union[Student, Lector]]):
@@ -131,12 +131,15 @@ def task4(course_name: str, recipients: List[Union[Student, Lector]]):
     for recipient in recipients:
         if recipient.course_exists(course_name):
             lecture_media.append(
-                sum(recipient.get_grades().get(course_name)) / recipient.get_grades().get(course_name).__len__()
+                sum(recipient.get_grades().get(course_name))
+                / recipient.get_grades().get(course_name).__len__()
             )
-    print(f"Средняя оценка по всем {recipients[0].get_role()} записанных на курс [ {course_name} ] "
-          f"==> {float((sum(lecture_media) / lecture_media.__len__()).__format__('.4'))}", end="\n")
+    print(
+        f"Средняя оценка по всем {recipients[0].get_role()} записанных на курс [ {course_name} ] "
+        f"==> {float((sum(lecture_media) / lecture_media.__len__()).__format__('.4'))}",
+        end="\n",
+    )
 
 
 if __name__ == "__main__":
     main()
-
